@@ -1,0 +1,24 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "*.com.peerpressure"
+        ],
+        "components": [
+          {
+            "/": "/join/*",
+            "comment": "Handle session join URLs"
+          },
+          {
+            "/": "/*",
+            "?": {
+              "code": "*"
+            },
+            "comment": "Handle query parameter session codes"
+          }
+        ]
+      }
+    ]
+  }
+}
