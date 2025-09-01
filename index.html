@@ -196,9 +196,24 @@
     </div>
 
     <script>
-        // Get session code from URL
-        const urlParts = window.location.pathname.split('/');
-        const sessionCode = urlParts[urlParts.length - 1];
+        // Get session code from URL - handle both /join/ABC123 and root with hash
+        let sessionCode = '';
+        
+        const pathParts = window.location.pathname.split('/');
+        if (pathParts.length >= 3 && pathParts[1] === 'join' && pathParts[2]) {
+            // Handle /join/ABC123 format
+            sessionCode = pathParts[2];
+        } else if (pathParts.length >= 2 && pathParts[1] && pathParts[1] !== 'index.html') {
+            // Handle direct session code in path
+            sessionCode = pathParts[1];
+        } else {
+            // Fallback to query parameter or hash
+            const urlParams = new URLSearchParams(window.location.search);
+            sessionCode = urlParams.get('code') || window.location.hash.slice(1) || 'DEMO';
+        }
+        
+        // Ensure 6 character uppercase code
+        sessionCode = sessionCode.toUpperCase().substring(0, 6) || 'DEMO';
         
         // Update UI with session code
         document.getElementById('sessionCode').textContent = sessionCode;

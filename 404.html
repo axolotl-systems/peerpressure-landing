@@ -5,23 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeerPressure</title>
     <script type="text/javascript">
-        // GitHub Pages SPA redirect for /join/[code] URLs
-        // This handles direct navigation to join URLs by redirecting to index.html
-        // while preserving the session code in the path
-        (function(l) {
-            if (l.search[1] === '/' ) {
-                var decoded = l.search.slice(1).split('&').map(function(s) { 
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
-            }
-        }(window.location))
-        
-        // Redirect /join/[code] to /index.html while preserving the path
-        if (window.location.pathname.startsWith('/join/')) {
-            window.location.href = '/index.html' + window.location.pathname + window.location.search;
+        // Extract session code from /join/ABC123 URLs and redirect to root with query param
+        const pathParts = window.location.pathname.split('/');
+        if (pathParts.length >= 3 && pathParts[1] === 'join' && pathParts[2]) {
+            const sessionCode = pathParts[2].toUpperCase().substring(0, 6);
+            // Redirect to root with code as query parameter
+            window.location.href = '/?code=' + sessionCode + window.location.search.substring(1) + window.location.hash;
+        } else {
+            // Default redirect to root
+            window.location.href = '/' + window.location.search + window.location.hash;
         }
     </script>
 </head>
