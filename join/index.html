@@ -12,6 +12,17 @@
     <meta property="og:type" content="website">
     
     <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --primary-blue: #6366F1;
+            --secondary-purple: #7C3AED;
+            --background-dark: #0F172A;
+            --surface-dark: #1F2937;
+            --text-primary: #FFFFFF;
+            --text-secondary: #C4B5FD;
+            --accent-purple: #A855F7;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,65 +30,84 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0F172A 0%, #581C87 50%, #0F172A 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--background-dark);
+            background: linear-gradient(135deg, var(--background-dark) 0%, #1E1B4B 35%, var(--surface-dark) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
         
         .container {
             text-align: center;
             padding: 2rem;
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
         }
         
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
         .logo {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #8B5CF6, #7C3AED, #6366F1);
-            border-radius: 24px;
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         
         .title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 0.5rem;
-            color: white;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .subtitle {
-            font-size: 1rem;
-            color: #A855F7;
+            font-size: 1.1rem;
+            color: var(--accent-purple);
             margin-bottom: 2rem;
+            font-weight: 500;
         }
         
         .session-info {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         
         .session-code {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
         }
         
         .session-label {
             font-size: 0.875rem;
-            color: #C4B5FD;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .button {
@@ -87,37 +117,45 @@
             border-radius: 16px;
             border: none;
             font-size: 1.125rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
         }
         
         .button-primary {
-            background: linear-gradient(135deg, #8B5CF6, #6366F1);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
         
         .button-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5);
+            background: linear-gradient(135deg, #9333EA, #7C3AED);
         }
         
         .button-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            color: var(--text-primary);
+            border: 2px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
         }
         
         .button-secondary:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
         }
         
         .status {
             margin-top: 1rem;
             font-size: 0.875rem;
-            color: #C4B5FD;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
         
         .hidden {
@@ -145,6 +183,15 @@
             }
             
             .title {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .session-code {
                 font-size: 1.75rem;
             }
         }
@@ -152,7 +199,39 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">PP</div>
+        <div class="logo-container">
+            <div class="logo">
+                <svg width="80" height="80" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#FF8E8E;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#6EE8E0;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#45B7D1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#66C7E1;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#F9CA24;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#F9D744;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#A55EEA;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#C078F0;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="url(#grad1)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="70" cy="45" r="16" fill="none" stroke="url(#grad2)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="60" cy="65" r="17" fill="none" stroke="url(#grad3)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="45" cy="80" r="15" fill="none" stroke="url(#grad4)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="75" cy="75" r="16" fill="none" stroke="url(#grad5)" stroke-width="6" opacity="0.9"/>
+                </svg>
+            </div>
+        </div>
         <h1 class="title">PeerPressure</h1>
         <p class="subtitle">Real friends, real focus</p>
         
