@@ -319,6 +319,65 @@
             height: 32px;
         }
 
+        /* Support Section */
+        .support-section {
+            margin: var(--spacing-md) 0;
+            text-align: center;
+        }
+
+        .support-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .support-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .support-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .support-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .support-btn.primary:hover {
+            background: var(--primary-variant);
+            transform: translateY(-2px);
+        }
+
+        .support-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .support-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .axolotl-logo {
+            width: 24px;
+            height: 24px;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .nav {
@@ -441,8 +500,6 @@
                     <circle cx="75" cy="75" r="16" fill="none" stroke="url(#hero-grad5)" stroke-width="6" opacity="0.9"/>
                 </svg>
 
-                <div class="coming-soon">Coming Soon</div>
-
                 <h1 class="hero-title">peerpressure</h1>
                 <p class="hero-subtitle">Real friends, real focus</p>
                 <p class="hero-description">
@@ -533,6 +590,22 @@
                 <span>&copy; 2025 Axolotl Systems. All rights reserved.</span>
             </div>
             <p>Break the cycle of digital distraction with friends who care.</p>
+
+            <div class="support-section">
+                <div class="support-title">
+                    <img src="axolotl.svg" alt="Axolotl Systems" class="axolotl-logo" style="vertical-align: middle; margin-right: 8px;">
+                    Support Development
+                </div>
+                <div class="support-buttons">
+                    <a href="https://ko-fi.com/axolotlsystems" class="support-btn primary">
+                        ❤️ Support on Ko-fi
+                    </a>
+                    <a href="https://github.com/sponsors/axolotl-systems" class="support-btn secondary">
+                        🌟 GitHub Sponsors
+                    </a>
+                </div>
+            </div>
+
             <p style="margin-top: 8px; font-size: 0.875rem; opacity: 0.6;">
                 Built by <a href="https://axolotl.systems/" style="color: var(--primary); text-decoration: none;">Axolotl Systems</a>
             </p>
