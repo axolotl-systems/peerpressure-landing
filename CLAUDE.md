@@ -4,6 +4,16 @@
 
 Static website hosting the **privacy policy** and landing page for **peerpressure.social**. This site is critical for Google Play Store compliance as it hosts the required privacy policy at `/privacy`.
 
+### **How to Use This Guide**
+
+**This CLAUDE.md is for website maintenance tasks only:**
+- **Privacy Policy Updates**: When app features change and privacy policy needs updates
+- **Domain/Hosting Issues**: When peerpressure.social has accessibility problems
+- **Google Play Compliance**: When app store submission requires privacy policy changes
+- **Content Updates**: When landing page needs modifications
+
+**For app development tasks**, navigate to `/peerpressure_app/` and use the app-specific CLAUDE.md instead.
+
 ## Site Architecture
 
 - **Hosting**: GitHub Pages
