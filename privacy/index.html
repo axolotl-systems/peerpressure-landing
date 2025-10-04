@@ -363,7 +363,7 @@
 
             <div class="meta-info">
                 <strong>Effective Date:</strong> September 16, 2024<br>
-                <strong>Last Updated:</strong> September 16, 2024<br>
+                <strong>Last Updated:</strong> October 4, 2024<br>
                 <strong>Company:</strong> Axolotl Systems
             </div>
 
@@ -388,27 +388,40 @@
                     <li><strong>Control:</strong> You can revoke camera permission in your device settings at any time</li>
                 </ul>
 
-                <h3>🔧 Accessibility Service (Android Only)</h3>
+                <h3>🔧 App and Website Blocking</h3>
                 <ul>
-                    <li><strong>Purpose:</strong> Monitor which apps you open to detect and block distracting apps during focus sessions</li>
+                    <li><strong>Purpose:</strong> Monitor and block access to distracting apps and websites during focus sessions</li>
                     <li><strong>Data Collected:</strong>
                         <ul>
                             <li>Names of apps you attempt to open during sessions</li>
-                            <li>Timestamps of app usage attempts</li>
+                            <li>Website domains you attempt to visit during sessions</li>
+                            <li>Timestamps of app and website access attempts</li>
                             <li>List of installed apps for blocking selection</li>
                         </ul>
                     </li>
-                    <li><strong>Data Processing:</strong> All app usage monitoring is processed locally on your device</li>
-                    <li><strong>Data Sharing:</strong> When you attempt to use blocked apps, the app name and timestamp are shared with your group members for accountability purposes</li>
+                    <li><strong>Data Processing:</strong> All app and website monitoring is processed locally on your device</li>
+                    <li><strong>Data Sharing:</strong> When you attempt to use blocked apps or websites, the app name/website domain and timestamp are shared with your group members for accountability purposes</li>
                     <li><strong>Privacy Protection:</strong>
                         <ul>
-                            <li>Only blocking attempts (not continuous usage) are shared with your group</li>
-                            <li>Group members see which blocked apps you attempt to use, but not your full app usage history</li>
-                            <li>All app blocking enforcement happens locally on your device</li>
-                            <li>The list of apps chosen for blocking is shared with session participants</li>
+                            <li>Only blocking attempts (not continuous usage or browsing history) are shared with your group</li>
+                            <li>Group members see which blocked apps or websites you attempt to access, but not your full app usage or browsing history</li>
+                            <li>All blocking enforcement happens locally on your device using platform-native APIs</li>
+                            <li>The list of apps and websites chosen for blocking is shared with session participants</li>
+                            <li>We do NOT collect your full browsing history - only attempts to access pre-configured blocked domains</li>
                         </ul>
                     </li>
-                    <li><strong>Control:</strong> You can disable the accessibility service at any time in Android Settings > Accessibility > peerpressure</li>
+                    <li><strong>Platform Implementation:</strong>
+                        <ul>
+                            <li><strong>Android:</strong> Uses AccessibilityService for app monitoring and VPN-based local filtering for website blocking</li>
+                            <li><strong>iOS:</strong> Uses Screen Time API (FamilyControls framework) for both app and website blocking</li>
+                        </ul>
+                    </li>
+                    <li><strong>Control:</strong> You can disable blocking at any time:
+                        <ul>
+                            <li>Android: Settings > Accessibility > peerpressure (for apps) and Settings > VPN (for websites)</li>
+                            <li>iOS: Settings > Screen Time > peerpressure</li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <h3>👤 Account Information</h3>
@@ -426,7 +439,7 @@
                 </h2>
                 <ul>
                     <li><strong>Session Management:</strong> Create and join focus sessions with other users</li>
-                    <li><strong>App Functionality:</strong> Enable core features like app blocking and session coordination</li>
+                    <li><strong>App Functionality:</strong> Enable core features like app and website blocking and session coordination</li>
                     <li><strong>Analytics:</strong> Improve app performance and user experience through Firebase Analytics</li>
                     <li><strong>Notifications:</strong> Send relevant session updates and reminders</li>
                 </ul>
@@ -452,7 +465,8 @@
                 <ul>
                     <li>All data transmission is encrypted using industry-standard protocols</li>
                     <li>Firebase security rules protect user data access</li>
-                    <li>Local app blocking data remains on your device</li>
+                    <li>Local app and website blocking data remains on your device</li>
+                    <li>Website blocking uses local VPN filtering (Android) or Screen Time API (iOS) - no data is sent to external servers</li>
                 </ul>
             </div>
 
