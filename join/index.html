@@ -297,8 +297,8 @@
         document.getElementById('sessionCode').textContent = sessionCode;
         document.getElementById('manualCode').textContent = sessionCode;
         
-        // Set up Play Store link with deep link
-        const playStoreUrl = `https://play.google.com/store/apps/details?id=com.peerpressure&referrer=session%3D${encodeURIComponent(sessionCode)}`;
+        // Set up Play Store link (referrer parameter doesn't support deep linking on first install)
+        const playStoreUrl = 'https://play.google.com/store/apps/details?id=social.peerpressure.app';
         document.getElementById('playStoreLink').href = playStoreUrl;
         
         let appDetectionAttempted = false;
