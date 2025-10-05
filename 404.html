@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>peerpressure</title>
     <script type="text/javascript">
-        // Extract session code from /join/ABC123 URLs and redirect to root with query param
+        // For /join/ URLs, redirect to the join page handler
         const pathParts = window.location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'join' && pathParts[2]) {
-            const sessionCode = pathParts[2].toUpperCase().substring(0, 6);
-            // Redirect to root with code as query parameter
-            window.location.href = '/?code=' + sessionCode + window.location.search.substring(1) + window.location.hash;
+        if (pathParts.length >= 2 && pathParts[1] === 'join') {
+            // Redirect to /join/index.html which will handle the session code
+            window.location.href = '/join/' + (pathParts[2] || '') + window.location.search + window.location.hash;
         } else {
-            // Default redirect to root
+            // Default redirect to root for all other 404s
             window.location.href = '/' + window.location.search + window.location.hash;
         }
     </script>
