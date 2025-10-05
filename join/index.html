@@ -283,22 +283,15 @@
     </div>
 
     <script>
-        // Get session code from URL path
-        // For /join/ABC123 or /join/?code=ABC123
-        let sessionCode = '';
-        
-        // Check URL path first (/join/ABC123)
+        // Get session code from URL path /join/ABC123
+        let sessionCode = 'UNKNOWN';
+
         const pathParts = window.location.pathname.split('/');
         if (pathParts.length >= 3 && pathParts[2]) {
-            sessionCode = pathParts[2];
+            sessionCode = pathParts[2].toUpperCase().substring(0, 6);
         } else {
-            // Fallback to query parameter (?code=ABC123)
-            const urlParams = new URLSearchParams(window.location.search);
-            sessionCode = urlParams.get('code') || 'UNKNOWN';
+            console.error('Invalid join URL - expected format: /join/ABC123');
         }
-        
-        // Ensure 6 character uppercase code
-        sessionCode = sessionCode.toUpperCase().substring(0, 6);
         
         // Update UI with session code
         document.getElementById('sessionCode').textContent = sessionCode;
