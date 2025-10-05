@@ -288,7 +288,13 @@
 
         const pathParts = window.location.pathname.split('/');
         if (pathParts.length >= 3 && pathParts[2]) {
-            sessionCode = pathParts[2].toUpperCase().substring(0, 6);
+            const potentialCode = pathParts[2].toUpperCase();
+            // Ignore index.html and only accept 6-character alphanumeric codes
+            if (potentialCode !== 'INDEX.HTML' && potentialCode.length === 6 && /^[A-Z0-9]{6}$/.test(potentialCode)) {
+                sessionCode = potentialCode;
+            } else {
+                console.error('Invalid session code - expected 6-character code, got:', pathParts[2]);
+            }
         } else {
             console.error('Invalid join URL - expected format: /join/ABC123');
         }
