@@ -3,27 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>peerpressure</title>
-    <script type="text/javascript">
-        // For /join/ URLs, redirect to the join page with code in URL
-        const pathParts = window.location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'join' && pathParts[2]) {
-            const sessionCode = pathParts[2].toUpperCase();
-            // Redirect to /join/ with code as hash fragment to avoid infinite loop
-            window.location.href = '/join/#' + sessionCode;
-        } else if (pathParts.length >= 2 && pathParts[1] === 'join') {
-            // Just /join/ without code - redirect to join page
-            window.location.href = '/join/';
-        } else {
-            // Default redirect to root for all other 404s
-            window.location.href = '/' + window.location.search + window.location.hash;
+    <title>Join peerpressure Session</title>
+    <meta name="description" content="Join your friends for a digital detox session with peerpressure">
+    
+    <!-- Open Graph for sharing -->
+    <meta property="og:title" content="Join peerpressure Session">
+    <meta property="og:description" content="Join your friends for a digital detox session">
+    <meta property="og:type" content="website">
+    
+    <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --primary-blue: #6366F1;
+            --secondary-purple: #7C3AED;
+            --background-dark: #0F172A;
+            --surface-dark: #1F2937;
+            --text-primary: #FFFFFF;
+            --text-secondary: #C4B5FD;
+            --accent-purple: #A855F7;
         }
-    </script>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--background-dark);
+            background: linear-gradient(135deg, var(--background-dark) 0%, #1E1B4B 35%, var(--surface-dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--accent-purple);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        
+        .session-info {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .session-code {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+        }
+        
+        .session-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            border: none;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5);
+            background: linear-gradient(135deg, #9333EA, #7C3AED);
+        }
+        
+        .button-secondary {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-primary);
+            border: 2px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .button-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .session-code {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-align: center; padding: 2rem; background: linear-gradient(135deg, #0F172A 0%, #581C87 50%, #0F172A 100%); min-height: 100vh; color: white;">
-        <h1>peerpressure</h1>
-        <p>Redirecting...</p>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">
+                <svg width="80" height="80" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#FF8E8E;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#6EE8E0;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#45B7D1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#66C7E1;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#F9CA24;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#F9D744;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#A55EEA;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#C078F0;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="url(#grad1)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="70" cy="45" r="16" fill="none" stroke="url(#grad2)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="60" cy="65" r="17" fill="none" stroke="url(#grad3)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="45" cy="80" r="15" fill="none" stroke="url(#grad4)" stroke-width="6" opacity="0.9"/>
+                    <circle cx="75" cy="75" r="16" fill="none" stroke="url(#grad5)" stroke-width="6" opacity="0.9"/>
+                </svg>
+            </div>
+        </div>
+        <h1 class="title">peerpressure</h1>
+        <p class="subtitle">Real friends, real focus</p>
+        
+        <div class="session-info">
+            <div class="session-code" id="sessionCode">...</div>
+            <div class="session-label">Session Code</div>
+        </div>
+        
+        <!-- Try to open app -->
+        <div id="tryApp">
+            <button class="button button-primary" onclick="tryOpenApp()">
+                <span class="spinner hidden" id="spinner"></span>
+                <span id="buttonText">Open peerpressure App</span>
+            </button>
+            <div class="status">Checking if you have the app...</div>
+        </div>
+        
+        <!-- Install app option (shown after timeout) -->
+        <div id="installApp" class="hidden">
+            <a href="#" class="button button-primary" id="playStoreLink">
+                📱 Install peerpressure
+            </a>
+            <button class="button button-secondary" onclick="tryOpenApp()">
+                I Already Have the App
+            </button>
+            <div class="status">Install peerpressure to join your friends!</div>
+        </div>
+        
+        <!-- Manual join option -->
+        <div id="manualJoin" class="hidden">
+            <p style="margin: 1rem 0; font-size: 0.875rem; color: #C4B5FD;">
+                Can't scan? Open peerpressure and enter this code manually:
+            </p>
+            <div class="session-info">
+                <div class="session-code" id="manualCode">...</div>
+                <button onclick="copyCode()" style="background: none; border: none; color: #A855F7; cursor: pointer; text-decoration: underline;">
+                    📋 Copy Code
+                </button>
+            </div>
+        </div>
+        
+        <!-- Attribution -->
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 0.75rem;">
+            <p style="margin: 8px 0;">
+                <a href="/privacy" style="color: #A855F7; text-decoration: none; font-weight: 500;">Privacy Policy</a>
+            </p>
+            &copy; 2025 Axolotl Systems. Built by <a href="https://axolotl.systems/" style="color: #A855F7; text-decoration: none;">Axolotl Systems</a>
+        </div>
     </div>
+
+    <script>
+        // Check if this is a /join/ URL - if not, redirect to home
+        const pathParts = window.location.pathname.split('/');
+        if (pathParts.length < 2 || pathParts[1] !== 'join') {
+            // Not a join URL - redirect to home
+            window.location.href = '/';
+        }
+
+        // Extract session code from URL path /join/ABC123
+        let sessionCode = 'UNKNOWN';
+
+        if (pathParts.length >= 3 && pathParts[2]) {
+            const potentialCode = pathParts[2].toUpperCase();
+            // Only accept 6-character alphanumeric codes
+            if (potentialCode.length === 6 && /^[A-Z0-9]{6}$/.test(potentialCode)) {
+                sessionCode = potentialCode;
+            } else {
+                console.error('Invalid session code - expected 6-character code, got:', pathParts[2]);
+            }
+        }
+        
+        // Update UI with session code
+        document.getElementById('sessionCode').textContent = sessionCode;
+        document.getElementById('manualCode').textContent = sessionCode;
+        
+        // Set up Play Store link (referrer parameter doesn't support deep linking on first install)
+        const playStoreUrl = 'https://play.google.com/store/apps/details?id=social.peerpressure.app';
+        document.getElementById('playStoreLink').href = playStoreUrl;
+        
+        let appDetectionAttempted = false;
+        
+        function tryOpenApp() {
+            if (appDetectionAttempted) {
+                // Second attempt - just try to open
+                window.location.href = `peerpressure://join/${sessionCode}`;
+                return;
+            }
+            
+            appDetectionAttempted = true;
+            
+            // Show loading state
+            document.getElementById('spinner').classList.remove('hidden');
+            document.getElementById('buttonText').textContent = 'Opening app...';
+            
+            // Try to open the app
+            const appUrl = `peerpressure://join/${sessionCode}`;
+            const startTime = Date.now();
+            
+            // Create a hidden iframe to trigger the app
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = appUrl;
+            document.body.appendChild(iframe);
+            
+            // Also try direct location change as fallback
+            setTimeout(() => {
+                try {
+                    window.location.href = appUrl;
+                } catch (e) {
+                    // Ignore errors from attempting to open app
+                }
+            }, 100);
+            
+            // Check if app opened (user left the page)
+            let hidden = false;
+            
+            const handleVisibilityChange = () => {
+                if (document.hidden) {
+                    hidden = true;
+                }
+            };
+            
+            const handlePageShow = () => {
+                if (hidden && Date.now() - startTime < 5000) {
+                    // User came back quickly, app probably opened
+                    return;
+                }
+            };
+            
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            window.addEventListener('pageshow', handlePageShow);
+            
+            // If app doesn't open within 2 seconds, show install option
+            setTimeout(() => {
+                if (!hidden) {
+                    showInstallOption();
+                }
+                
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+                window.removeEventListener('pageshow', handlePageShow);
+                document.body.removeChild(iframe);
+            }, 2000);
+        }
+        
+        function showInstallOption() {
+            document.getElementById('tryApp').classList.add('hidden');
+            document.getElementById('installApp').classList.remove('hidden');
+            document.getElementById('manualJoin').classList.remove('hidden');
+        }
+        
+        function copyCode() {
+            navigator.clipboard.writeText(sessionCode).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = sessionCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+        
+        // Auto-try opening app on page load (for QR code scans)
+        window.addEventListener('load', () => {
+            // Small delay to ensure page is fully loaded
+            setTimeout(tryOpenApp, 500);
+        });
+        
+        // Handle app installs - check if user returns from Play Store
+        window.addEventListener('focus', () => {
+            if (appDetectionAttempted) {
+                // User returned, maybe they installed the app
+                setTimeout(() => {
+                    if (confirm('Did you install peerpressure? Click OK to try opening it again.')) {
+                        tryOpenApp();
+                    }
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 </html>
