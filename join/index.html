@@ -283,20 +283,29 @@
     </div>
 
     <script>
-        // Get session code from URL path /join/ABC123
+        // Get session code from URL (path /join/ABC123 or hash /join/#ABC123)
         let sessionCode = 'UNKNOWN';
 
-        const pathParts = window.location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[2]) {
-            const potentialCode = pathParts[2].toUpperCase();
-            // Ignore index.html and only accept 6-character alphanumeric codes
-            if (potentialCode !== 'INDEX.HTML' && potentialCode.length === 6 && /^[A-Z0-9]{6}$/.test(potentialCode)) {
-                sessionCode = potentialCode;
-            } else {
-                console.error('Invalid session code - expected 6-character code, got:', pathParts[2]);
+        // First try hash fragment (from 404 redirect)
+        if (window.location.hash && window.location.hash.length > 1) {
+            const hashCode = window.location.hash.substring(1).toUpperCase();
+            if (hashCode.length === 6 && /^[A-Z0-9]{6}$/.test(hashCode)) {
+                sessionCode = hashCode;
             }
-        } else {
-            console.error('Invalid join URL - expected format: /join/ABC123');
+        }
+
+        // Fallback to path-based code
+        if (sessionCode === 'UNKNOWN') {
+            const pathParts = window.location.pathname.split('/');
+            if (pathParts.length >= 3 && pathParts[2]) {
+                const potentialCode = pathParts[2].toUpperCase();
+                // Ignore index.html and only accept 6-character alphanumeric codes
+                if (potentialCode !== 'INDEX.HTML' && potentialCode.length === 6 && /^[A-Z0-9]{6}$/.test(potentialCode)) {
+                    sessionCode = potentialCode;
+                } else {
+                    console.error('Invalid session code - expected 6-character code, got:', pathParts[2]);
+                }
+            }
         }
         
         // Update UI with session code
