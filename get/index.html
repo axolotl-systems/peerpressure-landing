@@ -253,14 +253,13 @@
             </div>
         </div>
 
-        <div class="coming-soon-badge">Coming Soon</div>
         <h1 class="title">peerpressure</h1>
         <p class="subtitle">Real friends, real focus</p>
-        
+
         <div class="message">
             <h2 class="message-title">📱 Get the App</h2>
             <p class="message-text">
-                peerpressure is launching soon! Join the waitlist to be notified when the app becomes available on your platform.
+                Download peerpressure on Android now! iOS version coming soon.
             </p>
         </div>
 
@@ -276,14 +275,11 @@
             </div>
         </div>
 
-        <!-- Fallback options when app isn't available -->
-        <div id="waitlist">
+        <!-- Back to home -->
+        <div id="backHome" class="hidden">
             <a href="/" class="button button-secondary">
                 🏠 Back to Home
             </a>
-            <p class="status">
-                Stay tuned for the official launch announcement!
-            </p>
         </div>
         
         <!-- Attribution -->
@@ -311,53 +307,54 @@
             
             if (isAndroid) {
                 // Android - show Google Play link
-                let playStoreUrl = 'https://play.google.com/store/apps/details?id=com.peerpressure';
+                let playStoreUrl = 'https://play.google.com/store/apps/details?id=social.peerpressure.app';
                 if (sessionCode) {
                     playStoreUrl += `&referrer=session%3D${encodeURIComponent(sessionCode)}`;
                 }
                 androidLink.href = playStoreUrl;
                 androidLink.classList.remove('hidden');
-                
+
                 // Auto-redirect on Android (since this is likely from a deep link)
                 setTimeout(() => {
                     window.location.href = playStoreUrl;
                 }, 1000);
-                
+
             } else if (isIOS) {
-                // iOS - show App Store link
-                let appStoreUrl = 'https://apps.apple.com/app/peerpressure/id123456789';
-                if (sessionCode) {
-                    appStoreUrl += `?ct=session-${sessionCode}`;
-                }
-                iosLink.href = appStoreUrl;
-                iosLink.classList.remove('hidden');
-                
-                // Auto-redirect on iOS
-                setTimeout(() => {
-                    window.location.href = appStoreUrl;
-                }, 1000);
-                
-            } else {
-                // Desktop or other - show both options
-                androidLink.href = 'https://play.google.com/store/apps/details?id=com.peerpressure';
-                iosLink.href = 'https://apps.apple.com/app/peerpressure/id123456789';
+                // iOS - show coming soon message instead
+                const message = document.querySelector('.message-text');
+                message.innerHTML = 'peerpressure is available now on Android! The iOS version is coming soon.<br><br>You can also download it on an Android device.';
+                androidLink.href = 'https://play.google.com/store/apps/details?id=social.peerpressure.app';
                 androidLink.classList.remove('hidden');
+
+            } else {
+                // Desktop or other - show Android option (iOS coming soon)
+                androidLink.href = 'https://play.google.com/store/apps/details?id=social.peerpressure.app';
+                androidLink.textContent = '📱 Get on Google Play';
+                androidLink.classList.remove('hidden');
+
+                // Show coming soon note for iOS
+                iosLink.textContent = '🍎 iOS Coming Soon';
                 iosLink.classList.remove('hidden');
+                iosLink.classList.remove('button-primary');
+                iosLink.classList.add('button-secondary');
+                iosLink.style.opacity = '0.6';
+                iosLink.style.cursor = 'not-allowed';
+                iosLink.onclick = (e) => { e.preventDefault(); };
             }
         }
 
-        // Check if apps are actually available (for future when they're published)
+        // Check if apps are actually available
         function checkAppAvailability() {
-            // For now, we'll assume apps aren't available yet
-            // In the future, this could ping the actual store APIs
-            const appsAvailable = false; // Change to true when apps are published
-            
+            // Android app is now available on Google Play Store!
+            const appsAvailable = true;
+
             if (!appsAvailable) {
-                // Hide store buttons, show waitlist message
+                // Hide store buttons
                 document.getElementById('storeRedirect').style.display = 'none';
+                document.getElementById('backHome').classList.remove('hidden');
                 return;
             }
-            
+
             setupStoreLinks();
         }
 
